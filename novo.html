@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MCJ 2025 - Patrulhas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    h2 {
+      color: #2c3e50;
+      font-weight: normal;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    input[type="text"] {
+      padding: 0.5rem 1rem;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      width: 100%;
+      max-width: 600px;
+    }
+    .card h3 {
+      margin-top: 0;
+      color: #34495e;
+    }
+    .card p {
+      margin: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+    .team {
+      margin-top: 1rem;
+      padding-left: 1.2rem;
+    }
+    .team li {
+      margin-bottom: 0.4rem;
+      list-style-type: disc;
+    }
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+<img src="PATRULHASPINGO.png" alt="Logo MCJ 2025" style="width: 80%; height: auto;"/>
+
+<h1>MCJ 2025 - COMANDO DE POLICIAMENTO REGIONAL I</h1>
+  <h2>Sábado, 07/08/2025 - Das 12h às 00h</h2>
+  <input type="text" id="search" placeholder="Digite nome do policial ou número da patrulha..." oninput="filtrarPatrulhas()" />
+
+  <div id="patrulhas-container">
+    <!-- Aqui serão inseridos os cards das patrulhas -->
+  </div>
+
+  <script>
+    // Dados das patrulhas - substitua pelos dados reais
+    const patrulhas =[
+  
+{
+  numero: '01',
+  nome: 'Patrulha 01 - Portão 1 - Rua Nísia Floresta - TURNO A',
+  unidade: 'CPR I',
+  local: 'Portão 1 - Rua Nísia Floresta - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'SULIANDRO VIEIRA LIMA', matricula: '167.074-3', lotacao: '1ª CPM / 2º BPM' },
+    { grad: '3º SGT PM', nome: 'SÉRGIO SILVA DE MIRANDA', matricula: '196.266-3', lotacao: '1ª CPM / 2º BPM' },
+    { grad: 'SD PM', nome: 'DAVID VINÍCIUS DANTAS AZEVEDO', matricula: '239.841-9', lotacao: '1ª CPM / 2º BPM' }
+  ]
+},
+
+{
+  numero: '02',
+  nome: 'Patrulha 02 - Portão 1 - Rua Nísia Floresta - TURNO B',
+  unidade: 'CPR I',
+  local: 'Portão 1 - Rua Nísia Floresta - TURNO B',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'FRANCISCO IRANILDO GOMES DE P.', matricula: '1675273', lotacao: '12º BPM' },
+    { grad: '3º SGT PM', nome: 'ANTÔNIO CARLOS FERREIRA DA S.', matricula: '1672444', lotacao: '12º BPM' },
+    { grad: 'CB PM', nome: 'IVANILSON MARTINS DA SILVA S.', matricula: '2273080', lotacao: '12º BPM' }
+  ]
+},
+{
+  numero: '03',
+  nome: 'Patrulha 03 - Portão 2 - Rua Felipe Camarão - TURNO A',
+  unidade: 'CPR I',
+  local: 'Portão 2 - Rua Felipe Camarão - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'RAIMUNDO OLIVEIRA COSTA', matricula: '114.722-6', lotacao: '1ª CPM /2º BPM' },
+    { grad: 'CB PM', nome: 'BRUNO HENRIQUE SOARES DE F.', matricula: '226.959-7', lotacao: '1ª CPM /2º BPM' },
+    { grad: 'SD PM', nome: 'GLAUTIERRE VERÍSSIMO DE F.', matricula: '246.836-0', lotacao: '1ª CPM /2º BPM' }
+  ]
+},
+{
+  numero: '04',
+  nome: 'Patrulha 04 - Portão 2 - Rua Felipe Camarão - TURNO B',
+  unidade: 'CPR I',
+  local: 'Portão 2 - Rua Felipe Camarão - TURNO B',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'MÁRCIO DOS SANTOS LÔBO', matricula: '163.705-3', lotacao: '12º BPM' },
+    { grad: '2º SGT PM', nome: 'IRINALDO ALVES BEZERRA', matricula: '1657305', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'RAFAEL MULLER FERREIRA DA SILVA', matricula: '2248700', lotacao: '12º BPM' }
+  ]
+},
+
+{
+  numero: '05',
+  nome: 'Patrulha 05 - Portão 3 - Frei Miguelinho - TURNO A',
+  unidade: 'CPR I',
+  local: 'Portão 3 - Frei Miguelinho - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'FRANCINÁRIO DE ARAÚJO FONSECA', matricula: '175.679-6', lotacao: '1ª CPM /2º BPM' },
+    { grad: '2º SGT PM', nome: 'DAMIÃO ALVES FRANÇA', matricula: '108.133-0', lotacao: '1ª CPM /2º BPM' },
+    { grad: '3º SGT PM', nome: 'DAVI DE SOUSA', matricula: '202.612-0', lotacao: '1ª CPM /2º BPM' }
+  ]
+},
+{
+  numero: '06',
+  nome: 'Patrulha 06 - Portão 3 - Frei Miguelinho - TURNO B',
+  unidade: 'CPR I',
+  local: 'Portão 3 - Frei Miguelinho - TURNO B',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'JANDERLEY KENNEDY G. DE SOUZA', matricula: '108.150-0', lotacao: '12º BPM' },
+    { grad: '2º SGT PM', nome: 'PAULO CEZAR DA SILVA', matricula: '1627015', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'MORGANA SAYONARA FERREIRA V. PRAXEDES', matricula: '2399440', lotacao: '12º BPM' }
+  ]
+},
+{
+  numero: '07',
+  nome: 'Patrulha 07 - Portão 4 - Igreja São Vicente - TURNO A',
+  unidade: 'CPR I',
+  local: 'Portão 4 - Igreja São Vicente - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'SEBASTIÃO SEVERINO BEZERRA', matricula: '114.725-0', lotacao: '1ª CPM /2º BPM' },
+    { grad: '2º SGT PM', nome: 'JANEWMAR AQUINO DE LACERDA', matricula: '166.683-5', lotacao: '1ª CPM /2º BPM' },
+    { grad: '2º SGT PM', nome: 'FRANCERLIDE MACEDO AMARAL', matricula: '176.239-7', lotacao: '1ª CPM /2º BPM' }
+  ]
+},
+{
+  numero: '08',
+  nome: 'Patrulha 08 - Portão 4 - Igreja São Vicente - TURNO B',
+  unidade: 'CPR I',
+  local: 'Portão 4 - Igreja São Vicente - TURNO B',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'ANTÔNIO ADRIANO DE FREITAS P.', matricula: '1949071', lotacao: '12º BPM' },
+    { grad: '3º SGT PM', nome: 'LUIZ DE LIMA ASSUNÇÃO', matricula: '2022346', lotacao: '12º BPM' },
+    { grad: 'CB PM', nome: 'GERALDO REINALDO DE OLIVEIRA J.', matricula: '2278375', lotacao: '12º BPM' }
+  ]
+},
+{
+  numero: '09',
+  nome: 'Patrulha 09 - Portão 5 - Av. Augusto Severo / Av. Al. Maranhão - TURNO A',
+  unidade: 'CPR I',
+  local: 'Portão 5 - Av. Augusto Severo / Av. Al. Maranhão - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'ANTÔNIO OCIMAR MARINHO LEITE', matricula: '114.702-1', lotacao: '1ª CPM /2º BPM' },
+    { grad: '2º SGT PM', nome: 'JOSÉ LUÍS ALVES DO VALE', matricula: '195.692-2', lotacao: '1ª CPM /2º BPM' },
+    { grad: 'SD PM', nome: 'ROMILDO DOS SANTOS SILVA', matricula: '247.484-0', lotacao: '1ª CPM /2º BPM' }
+  ]
+},
+{
+  numero: '10',
+  nome: 'Patrulha 10 - Portão 5 - Av. Augusto Severo / Av. Al. Maranhão - TURNO B',
+  unidade: 'CPR I',
+  local: 'Portão 5 - Av. Augusto Severo / Av. Al. Maranhão - TURNO B',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'GENIVAL ANTÔNIO DA SILVA', matricula: '1120115', lotacao: '12º BPM' },
+    { grad: '2º SGT PM', nome: 'CARLOS ALEXANDRE COELHO', matricula: '1626736', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'ALISSANDRA DANTAS BRITO', matricula: '2465434', lotacao: '12º BPM' }
+  ]
+},
+{
+  numero: '11',
+  nome: 'Patrulha 11 - Portão 6 - Lat. do Prédio Estação das Artes - TURNO A',
+  unidade: 'CPR I',
+  local: 'Portão 6 - Lat. do Prédio Estação das Artes - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'ALEXANDRE SILVA DE ARAÚJO', matricula: '165.913-8', lotacao: '1ª CPM /2º BPM' },
+    { grad: '2º SGT PM', nome: 'SUELITON SOUZA DA COSTA', matricula: '165.888-3', lotacao: '1ª CPM /2º BPM' },
+    { grad: 'SD PM', nome: 'JOÃO CÂNDIDO ROCHA LIMA', matricula: '246.717-8', lotacao: '1ª CPM /2º BPM' }
+  ]
+},
+
+
+{
+  numero: '12',
+  nome: 'Patrulha 12 - Portão 6 - Lat. do Prédio Estação das Artes - TURNO B',
+  unidade: 'CPR I',
+  local: 'Portão 6 - Lat. do Prédio Estação das Artes - TURNO B',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'JOSÉ LUCIANO ALVES DE BRITO', matricula: '1667688', lotacao: '12º BPM' },
+    { grad: '2º SGT PM', nome: 'FRANCISCO DAS CHAGAS B. DA S.', matricula: '1627210', lotacao: '12º BPM' },
+    { grad: '3º SGT PM', nome: 'FRANSUESSON RIVELINO ALVES DE O.', matricula: '2021919', lotacao: '12º BPM' }
+  ]
+},
+{
+  numero: '13',
+  nome: 'Patrulha 13 - Portão 7 - Lat. Estação das Artes - sent. BH - TURNO A',
+  unidade: 'CPR I',
+  local: 'Portão 7 - Lat. Estação das Artes - sent. BH - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'LEONARDO JOSÉ DE LIMA', matricula: '123.281-9', lotacao: '3ª CPM /2º BPM' },
+    { grad: '3º SGT PM', nome: 'LEVI MARTINS DA COSTA', matricula: '201.945-0', lotacao: '3ª CPM /2º BPM' },
+    { grad: 'CB PM', nome: 'JÚLIO CÉSAR FIGUEREDO DA FONSECA MACHADO', matricula: '227.408-6', lotacao: '3ª CPM /2º BPM' }
+  ]
+},
+{
+  numero: '14',
+  nome: 'Patrulha 14 - Portão 7 - Lat. Estação das Artes - sent. BH - TURNO B',
+  unidade: 'CPR I',
+  local: 'Portão 7 - Lat. Estação das Artes - sent. BH - TURNO B',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'MANOEL FRANCISCO DE SOUZA', matricula: '549959', lotacao: '12º BPM' },
+    { grad: '2º SGT PM', nome: 'ANYSTÔNIO KOSTAKIS ALVES DE L', matricula: '1759531', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'PABLINA QUITÉRIA ALBANO DE OLIVEIRA', matricula: '2399504', lotacao: '12º BPM' }
+  ]
+},
+{
+  numero: '15',
+  nome: 'Patrulha 15 - Portão 8 - Av. Augusto Severo / Juv. Lamartine - TURNO A',
+  unidade: 'CPR I',
+  local: 'Portão 8 - Av. Augusto Severo / Juv. Lamartine - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'JOSÉ PAULINO MENDES JÚNIOR', matricula: '166.772-6', lotacao: '3ª CPM /2º BPM' },
+    { grad: 'CB PM', nome: 'JOSÉ WHASHINGTON DE SANTIAGO', matricula: '227.395-0', lotacao: '3ª CPM /2º BPM' },
+    { grad: 'SD PM', nome: 'WANNA MARTINS MATOS', matricula: '247.096-9', lotacao: '3ª CPM /2º BPM' }
+  ]
+},
+{
+  numero: '16',
+  nome: 'Patrulha 16 - Portão 8 - Av. Augusto Severo / Juv. Lamartine - TURNO B',
+  unidade: 'CPR I',
+  local: 'Portão 8 - Av. Augusto Severo / Juv. Lamartine - TURNO B',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'JAIR MAIA DE OLIVEIRA', matricula: '1147161', lotacao: '12º BPM' },
+    { grad: '2º SGT PM', nome: 'JUSCELINO BATALHA ALVES REGO', matricula: '1668080', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'ELTON FEITOSA FIGUEREDO', matricula: '2474549', lotacao: '12º BPM' }
+  ]
+},
+{
+  numero: '17',
+  nome: 'Patrulha 17 - Portão 9 - Frei Miguelinho com R. Princ. Isabel - TURNO A',
+  unidade: 'CPR I',
+  local: 'Portão 9 - Frei Miguelinho com R. Princ. Isabel - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'JOSÉ FAGNER DANTAS DE PAIVA', matricula: '195.195-5', lotacao: '3ª CPM /2º BPM' },
+    { grad: '3º SGT PM', nome: 'Antônio Nílson Fernandes de Sousa', matricula: '202.002-5', lotacao: '1ª CPM /2º BPM' },
+    { grad: 'CB PM', nome: 'PAULO VICTOR DE SOUZA SILVA', matricula: '2275660', lotacao: '2ª CPM /2º BPM' }
+  ]
+},
+{
+  numero: '18',
+  nome: 'Patrulha 18 - Portão 9 - Frei Miguelinho com R. Princ. Isabel - TURNO B',
+  unidade: 'CPR I',
+  local: 'Portão 9 - Frei Miguelinho com R. Princ. Isabel - TURNO B',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'ALEX JOSÉ DE OLIVEIRA', matricula: '108.119-5', lotacao: '12º BPM' },
+    { grad: '2º SGT PM', nome: 'JOSÉ LINDEMBERG DA SILVA', matricula: '1667653', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'YANKEE FERNANDES TORRES', matricula: '2471205', lotacao: '12º BPM' }
+  ]
+},
+{
+  numero: '19',
+  nome: 'Patrulha 19 - Portão 10 - Final da R. Princ. Isabel com R. Nisia Flr. - TURNO A',
+  unidade: 'CPR I',
+  local: 'Portão 10 - Final da R. Princ. Isabel com R. Nisia Flr. - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'ALMIR NOGUEIRA DA COSTA J.', matricula: '195.080-0', lotacao: '2ª CPM /2º BPM' },
+    { grad: '3º SGT PM', nome: 'ALLAN GEORGE DE MENEZES', matricula: '2019639', lotacao: '2ª CPM /2º BPM' },
+    { grad: 'CB PM', nome: 'JOSÉ JEFFERSON MOREIRA ARAÚJO', matricula: '2273772', lotacao: '2ª CPM /2º BPM' }
+  ]
+},
+{
+  numero: '20',
+  nome: 'Patrulha 20 - Portão 10 - Final da R. Princ. Isabel com R. Nisia Flr. - TURNO B',
+  unidade: 'CPR I',
+  local: 'Portão 10 - Final da R. Princ. Isabel com R. Nisia Flr. - TURNO B',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'HOSANO SANDERSAN SARAIVA D.', matricula: '1757946', lotacao: '12º BPM' },
+    { grad: 'CB PM', nome: 'PEDRO TEÓFILO SILVA DE MOURA', matricula: '2275759', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'WILLIAN HERMESSON SILVA DE M.', matricula: '2472392', lotacao: '12º BPM' }
+  ]
+},
+{
+  numero: '21',
+  nome: 'Patrulha 21 - PRAÇA DE ESPORTES (Sentido BH) - TURNO A',
+  unidade: 'CPR I',
+  local: 'PRAÇA DE ESPORTES (Sentido BH) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'JOSÉGILSON DE OLIVEIRA', matricula: '114.717-0', lotacao: '1ª CPM /2º BPM' },
+    { grad: '1º SGT PM', nome: 'JOÃO ISMAR FERNANDES DANTAS', matricula: '163.627-8', lotacao: '1ª CPM /2º BPM' },
+    { grad: '2º SGT PM', nome: 'JÔNATAS BARBOSA DE ALMEIDA', matricula: '163.927-7', lotacao: '1ª CPM /2º BPM' },
+    { grad: '3º SGT PM', nome: 'ÍTALLO MOURA DA CUNHA', matricula: '202.228-1', lotacao: '2ª CPM /2º BPM' },
+    { grad: '3º SGT PM', nome: 'JOAQUIM ROSA SANTOS BISNETO', matricula: '202.273-3', lotacao: '3ª CPM /2º BPM' },
+    { grad: '3º SGT PM', nome: 'KLEBER CRISTIANO CABRAL DO N.', matricula: '197.207-3', lotacao: '3ª CPM /2º BPM' },
+    { grad: 'CB PM', nome: 'WELLINGTON KLEBER F. DE ALBU. MARQUES', matricula: '227.759-0', lotacao: '1ª CPM /2º BPM' },
+    { grad: 'CB PM', nome: 'EDUARDO BRUNO DANTAS', matricula: '227.146-0', lotacao: '1ª CPM /2º BPM' },
+    { grad: 'CB PM', nome: 'ABIDAN-ÉBER CAETANO DE M.', matricula: '226.850-7', lotacao: '1ª CPM /2º BPM' },
+    { grad: 'SD PM', nome: 'JOAO BATISTA DE OLIVEIRA F. DA C.', matricula: '2471752', lotacao: '2ª CPM /2º BPM' }
+  ]
+},
+{
+  numero: '22',
+  nome: 'Patrulha 22 - PRAÇA DE ESPORTES (Sentido SANTO ANTONIO) - TURNO A',
+  unidade: 'CPR I',
+  local: 'PRAÇA DE ESPORTES (Sentido SANTO ANTONIO) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'JOSÉ RICARDO DE SOUZA NOGUEIRA', matricula: '1667769', lotacao: '12º BPM' },
+    { grad: '3º SGT PM', nome: 'RANIERE DA SILVA LOPES', matricula: '2022877', lotacao: '12º BPM' },
+    { grad: 'CB PM', nome: 'JEFFERSON FERREIRA DE OLIVEIRA', matricula: '2270110', lotacao: '12º BPM' },
+    { grad: 'CB PM', nome: 'JOSÉ EDSON DE ALMEIDA ROCHA', matricula: '2273632', lotacao: '12º BPM' },
+    { grad: 'CB PM', nome: 'FRANCISCO ROGÉRIO VIEIRA TAVARES', matricula: '2272237', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'PEDRO FÉLIX REBOUÇAS NETO', matricula: '2402530', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'CARLIMAR RODRIGUES DA SILVA', matricula: '2466066', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'RAMON ADRIANO RODRIGUES DE ANDRADE', matricula: '2469359', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'IAGO SOMBRA CAMPOS', matricula: '2468611', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'JONÁBIO PINHEIRO BEZERRA', matricula: '2467429', lotacao: '12º BPM' }
+  ]
+},
+
+{
+  numero: '23',
+  nome: 'Patrulha 23 - Teatro Dix-Huit Rosado (Sentido BH) - TURNO A',
+  unidade: 'CPR I',
+  local: 'Teatro Dix-Huit Rosado (Sentido BH) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'CARLOS ALBERTO COSTA DE ANDRADE', matricula: '1637479', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'IKARO LEOPOLDO RIBEIRO DA SILVA FERREIRA', matricula: '2468662', lotacao: '12º BPM' },
+    { grad: '3º SGT PM', nome: 'FRANCISCO DE ASSIS DE LIMA', matricula: '1130757', lotacao: '12º BPM' },
+    { grad: '3º SGT PM', nome: 'ANTONIO AMADEU DA COSTA JÚNIOR', matricula: '2015170', lotacao: '12º BPM' },
+    { grad: '3º SGT PM', nome: 'ADRYANNO KARLLOS PAIVA PEREIRA', matricula: '2019493', lotacao: '12º BPM' },
+    { grad: 'CB PM', nome: 'ALEXANDRE FERNANDES ROBERTO', matricula: '2273209', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'FRANCISCO LUCAS GOMES DE MORAIS', matricula: '2472953', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'JÚLIA MARIA DA CONCEIÇÃO NETA', matricula: '2061449', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'ÉRICLES DE OLIVEIRA FARIAS', matricula: '2471361', lotacao: '12º BPM' },
+    { grad: 'SD PM', nome: 'EVA VITÓRIA SANTOS DE LIMA', matricula: '2465167', lotacao: '12º BPM' }
+  ]
+},
+{
+  numero: '24',
+  nome: 'Patrulha 24 - Teatro Dix-Huit Rosado (Sentido SANTO ANTONIO) - TURNO A',
+  unidade: 'CPR I',
+  local: 'Teatro Dix-Huit Rosado (Sentido SANTO ANTONIO) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'RILVANCI SOUZA DE OLIVEIRA', matricula: '1138847', lotacao: '6ª CIPM' },
+    { grad: '3º SGT PM', nome: 'FRANCISCO DAS CHAGAS ALVES DA PENHA', matricula: '2020831', lotacao: '6ª CIPM' },
+    { grad: '3º SGT PM', nome: 'ANTONIO FRANCISCO DA COSTA NETO', matricula: '2019949', lotacao: '6ª CIPM' },
+    { grad: 'SD PM', nome: 'GERALDO FRANCISCO COSTA JÚNIOR', matricula: '2398729', lotacao: '6ª CIPM' },
+    { grad: 'SD PM', nome: 'JARLAN MEDEIROS BATISTA', matricula: '2466988', lotacao: '6ª CIPM' },
+    { grad: 'SD PM', nome: 'SAMUEL CALEBE GADELHO DA SILVA', matricula: '2469774', lotacao: '6ª CIPM' }
+  ]
+},
+{
+  numero: '25',
+  nome: 'Patrulha 25 - Praça da Convivência (Sentido BH) - TURNO A',
+  unidade: 'CPR I',
+  local: 'Praça da Convivência (Sentido BH) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'CID MAX SOUZA DE OLIVEIRA', matricula: '1639862', lotacao: '6ª CIPM' },
+    { grad: '3º SGT PM', nome: 'RENILSON DA SILVA CAVALCANTE', matricula: '2022990', lotacao: '6ª CIPM' },
+    { grad: 'CB PM', nome: 'RENAN DA COSTA OLIVEIRA', matricula: '2276151', lotacao: '6ª CIPM' },
+    { grad: 'CB PM', nome: 'WINICIUS ALEXANDRE OLIVEIRA COSTA', matricula: '2277697', lotacao: '6ª CIPM' },
+    { grad: 'SD PM', nome: 'AUGUSTO LIMA DA COSTA JÚNIOR', matricula: '2120410', lotacao: '6ª CIPM' },
+    { grad: 'SD PM', nome: 'WESLEY LIMA ALVES', matricula: '2472376', lotacao: '6ª CIPM' },
+    { grad: 'SD PM', nome: 'VANDERSON NEVES E SILVA', matricula: '2470799', lotacao: '6ª CIPM' }
+  ]
+},
+
+{
+  numero: '26',
+  nome: 'Patrulha 026 - Memorial da Resistência (Sentido SANTO ANTONIO) - TURNO A',
+  unidade: 'CPR I',
+  local: 'Memorial da Resistência (Sentido SANTO ANTONIO) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'FRANCISCO GILDEMAR DE OLIVEIRA SERAFIM', matricula: '1628470', lotacao: '6ª CIPM' },
+    { grad: '2º SGT PM', nome: 'ALGENOR FLORÊNCIO DE OLIVEIRA', matricula: '1655930', lotacao: '6ª CIPM' },
+    { grad: '3º SGT PM', nome: 'LEANDRO ALYSON PINTO DE FREITAS', matricula: '2054876', lotacao: '6ª CIPM' },
+    { grad: 'CB PM', nome: 'DANIEL MAX SOARES MOREIRA', matricula: '2270838', lotacao: '6ª CIPM' },
+    { grad: 'SD PM', nome: 'LUAN SADOK SOARES COSTA', matricula: '2469987', lotacao: '6ª CIPM' },
+    { grad: 'SD PM', nome: 'MARICELIO FERREIRA DE OLIVEIRA', matricula: '2475944', lotacao: '6ª CIPM' },
+    { grad: 'SD PM', nome: 'PAULO DA SILVA MARTINS', matricula: '2475758', lotacao: '6ª CIPM' }
+  ]
+},
+{
+  numero: '27',
+  nome: 'FT 2º BPM - 27 - Entorno do Evento (Sentido BH) - TURNO A',
+  unidade: 'CPR I',
+  local: 'Entorno do Evento (Sentido BH) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'MARCOS ANTÔNIO ALBUQUERQUE FONTES', matricula: '1951599', lotacao: 'VTR Força Tática / 2º BPM' },
+    { grad: 'SGT PM', nome: 'WANDERLEY FREIRE DA SILVA', matricula: '2015404', lotacao: 'VTR Força Tática / 2º BPM' },
+    { grad: 'CB PM', nome: 'VIVIANE RANA ALVES', matricula: '2227401', lotacao: 'VTR Força Tática / 2º BPM' },
+    { grad: 'CB PM', nome: 'CARLOS ANTÔNIO DA SILVA JÚNIOR', matricula: '2269660', lotacao: 'VTR Força Tática / 2º BPM' }
+  ]
+},
+
+{
+  numero: '28',
+  nome: 'GTO 2º BPM - 28 - Entorno do Evento (Sentido SANTO ANTONIO) - TURNO A',
+  unidade: 'CPR I',
+  local: 'Entorno do Evento (Sentido SANTO ANTONIO) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'PEDRO MOREIRA JÚNIOR', matricula: '1669770', lotacao: 'VTR GTO / 2º BPM' },
+    { grad: 'CB PM', nome: 'REINALDO FERNANDES PIMENTA JÚNIOR', matricula: '2276135', lotacao: 'VTR GTO / 2º BPM' },
+    { grad: 'SD PM', nome: 'LÍDIA RENIÊ FERNANDES DA SILVA', matricula: '2399210', lotacao: 'VTR GTO / 2º BPM' }
+  ]
+},
+{
+  numero: '29',
+  nome: 'GTO 2º BPM - 029 - Entorno do Evento (Sentido SANTO ANTONIO) - TURNO A',
+  unidade: 'CPR I',
+  local: 'Entorno do Evento (Sentido SANTO ANTONIO) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'AERTON BEZERRA DE FREITAS', matricula: '1948890', lotacao: 'VTR GTO / 2º BPM' },
+    { grad: 'SD PM', nome: 'SUZANE DOS SANTOS BARBOSA', matricula: '2400316', lotacao: 'VTR GTO / 2º BPM' },
+    { grad: 'CB PM', nome: 'FAGNER LIMA PIRES DE SOUSA', matricula: '2240017', lotacao: 'VTR GTO / 2º BPM' }
+  ]
+},
+{
+  numero: '30',
+  nome: 'ROCAM 2º BPM - 30 - Entorno do Evento (Sentido BH) - TURNO A',
+  unidade: 'CPR I',
+  local: 'Entorno do Evento (Sentido BH) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'SD PM', nome: 'GILBERTO DE ALBUQUERQUE RODRIGUES JÚNIOR', matricula: '2472864', lotacao: 'VTR ROCAM / 2º BPM' },
+    { grad: 'SD PM', nome: 'JEDAÍAS JEFFERSON DE SOUSA FREITAS', matricula: '2467020', lotacao: 'VTR ROCAM / 2º BPM' },
+    { grad: 'SD PM', nome: 'ANTÔNIO JEFFERSON DE MORAIS BEZERRA', matricula: '2465752', lotacao: 'VTR ROCAM / 2º BPM' }
+  ]
+},
+{
+  numero: '31',
+  nome: 'VTR 2ª CPM - 31 - Entorno do Evento (Sentido SANTO ANTONIO) - TURNO A',
+  unidade: 'CPR I',
+  local: 'Entorno do Evento (Sentido SANTO ANTONIO) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'WESCLEY MARTINS DE ANDRADE', matricula: '2021889', lotacao: 'VTR 2ª CPM / 2º BPM' },
+    { grad: 'SD PM', nome: 'NÁGILA DALYANA COSTA DAS NEVES', matricula: '2400308', lotacao: 'VTR 2ª CPM / 2º BPM' },
+    { grad: '3º SGT PM', nome: 'JOSÉ ANCHIETA DE FREITAS SILVA', matricula: '2022583', lotacao: 'VTR 2ª CPM / 2º BPM' }
+  ]
+},
+{
+  numero: '32',
+  nome: 'ROCAM 12º BPM - Entorno do Evento (Sentido BH) - TURNO A',
+  unidade: 'CPR I',
+  local: 'Entorno do Evento (Sentido BH) - TURNO A',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '2º SGT PM', nome: 'BRUNO DIEGO ALBUQUERQUE', matricula: '1949918', lotacao: 'VTR ROCAM / 12º BPM' },
+    { grad: 'CB PM', nome: 'JOÃO BATISTA DE SOUZA JÚNIOR', matricula: '2270366', lotacao: 'VTR ROCAM / 12º BPM' },
+    { grad: 'CB PM', nome: 'GILLIARD FERREIRA DE PAIVA MOURA', matricula: '2272458', lotacao: 'VTR ROCAM / 12º BPM' },
+    { grad: 'CB PM', nome: 'MARLLOS HELLAN FERREIRA DE ARAÚJO', matricula: '2275198', lotacao: 'VTR ROCAM / 12º BPM' },
+    { grad: 'SD PM', nome: 'JADSON SOUZA CHAVES GONDIM', matricula: '2466929', lotacao: 'VTR ROCAM / 12º BPM' }
+  ]
+},
+
+{
+  numero: '33',
+  nome: 'Patrulha 33 - Praça de Esportes (Sentido BH) - TURNO A',
+  unidade: 'CPC/CPM',
+  local: 'Praça de Esportes - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'GUTEMBERG NICOLAU DE MEDEIROS', matricula: '1644009', lotacao: 'CFAPM' },
+    { grad: '2º SGT PM', nome: 'CELSO HENRIQUE ARAÚJO DE MELO', matricula: '1673033', lotacao: 'DGE' },
+    { grad: '2º SGT PM', nome: 'ISAIAS ROMANO DE FREITAS', matricula: '1644106', lotacao: 'DPS' },
+    { grad: '3º SGT PM', nome: 'JOSIEL SANTOS DE SOUZA', matricula: '2080028', lotacao: 'CPL' },
+    { grad: 'SD PM', nome: 'TAMIRES OLIVEIRA DA SILVA', matricula: '2400324', lotacao: 'DF' }
+  ]
+},
+{
+  numero: '34',
+  nome: 'Patrulha 34 - Praça de Esportes (Sentido BH) - TURNO A',
+  unidade: 'CPC/CPM',
+  local: 'Praça de Esportes - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'ANTÔNIO ANÍSIO DA SILVA', matricula: '1672428', lotacao: 'DTIC' },
+    { grad: '1º SGT PM', nome: 'JOSÉ JAILSON DA SILVA', matricula: '1120050', lotacao: '4ª S./EMG' },
+    { grad: '2º SGT PM', nome: 'HUMBERTO MARTINS DA COSTA J', matricula: '1963554', lotacao: 'DP' },
+    { grad: '2º SGT PM', nome: 'JOÃO MARIA VITALIANO', matricula: '1758683', lotacao: 'DP' },
+    { grad: '3º SGT PM', nome: 'JORGE LUIZ DE ANDRADE GALVÃO', matricula: '2054825', lotacao: 'DTIC' },
+    { grad: '2º SGT PM', nome: 'JOSAFÁ SANTOS DE SOUZA', matricula: '1946803', lotacao: 'DTIC' }
+  ]
+},
+{
+  numero: '35',
+  nome: 'Patrulha 35 - Praça de Esportes (Sentido BH) - TURNO A',
+  unidade: 'CPC/CPM',
+  local: 'Praça de Esportes - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'CLEIDE DE SOUZA SILVA TAVARES', matricula: '1644777', lotacao: 'DS' },
+    { grad: '1º SGT PM', nome: 'JOSÉ KLEBER FERREIRA M.', matricula: '1635689', lotacao: 'CAPELANIA' },
+    { grad: '2º SGT PM', nome: 'LUÍS CÉSAR DANTAS E SILVA', matricula: '1757610', lotacao: 'DP' },
+    { grad: '2º SGT PM', nome: 'RAFAEL DE LIMA SIQUEIRA', matricula: '1963350', lotacao: 'DP' },
+    { grad: '2º SGT PM', nome: 'RANGEL SANTOS DA SILVEIRA', matricula: '1949144', lotacao: 'DP' },
+    { grad: 'CB PM', nome: 'HELTER FERREIRA FIRMINO', matricula: '2272750', lotacao: 'DP' }
+  ]
+},
+
+{
+  numero: '36',
+  nome: 'Patrulha 36 - Praça de Esportes (Sentido Santo Antônio) - TURNO A',
+  unidade: 'CPC/CPM',
+  local: 'Praça de Esportes - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'EDIZOMAR DE OLIVEIRA', matricula: '1622560', lotacao: 'DS' },
+    { grad: '1º SGT PM', nome: 'JOSEMA BARRETO', matricula: '1636146', lotacao: 'GSI' },
+    { grad: '2º SGT PM', nome: 'JOSÉ LUIZ DE FRANÇA', matricula: '1635662', lotacao: 'GSI' },
+    { grad: 'CB PM', nome: 'ALLANA CARVALHO DE ARAÚJO TAVARES', matricula: '2273381', lotacao: 'DS' },
+    { grad: 'CB PM', nome: 'FELIPE DANTAS COELHO', matricula: '2272008', lotacao: 'DS' },
+    { grad: 'CB PM', nome: 'INGRID DE LIMA SOTERO BARBOSA', matricula: '2272890', lotacao: 'DS' }
+  ]
+},
+{
+  numero: '37',
+  nome: 'Patrulha 37 - Praça de Esportes (Sentido Santo Antônio) - TURNO A',
+  unidade: 'CPC/CPM',
+  local: 'Praça de Esportes - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'FÁBIO DOS SANTOS VALLE', matricula: '1130595', lotacao: 'CPM' },
+    { grad: '1º SGT PM', nome: 'LAMARK DE SOUZA PEREIRA', matricula: '1639978', lotacao: 'CFAPM' },
+    { grad: 'CB PM', nome: 'PEDRO VICTOR FABRICIO DO NASCIMENTO', matricula: '2275767', lotacao: 'DF' },
+    { grad: 'CB PM', nome: 'THIAGO HENRIQUE BORGES DE MEDEIROS', matricula: '2277077', lotacao: 'DJD' },
+    { grad: 'CB PM', nome: 'ALEX TITO DE OLIVEIRA', matricula: '2268736', lotacao: 'DTIC' },
+    { grad: 'SD PM', nome: 'AMÓS ANDRADE DE FREITAS', matricula: '2465523', lotacao: 'CPMUS' }
+  ]
+},
+{
+  numero: '38',
+  nome: 'Patrulha 38 - Praça de Esportes (Sentido Santo Antônio) - TURNO A',
+  unidade: 'CPC/CPM',
+  local: 'Praça de Esportes - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'FRANCISCO MARTINS DA SILVA FILHO', matricula: '1638696', lotacao: 'DAL' },
+    { grad: '1º SGT PM', nome: 'LUCIANO SEVESON DE SOUSA B.', matricula: '1148206', lotacao: 'CFAPM' },
+    { grad: 'CB PM', nome: 'JONAS DA COSTA FARIAS', matricula: '2270544', lotacao: 'SJUR' },
+    { grad: 'CB PM', nome: 'JOSINEIDE KALINE DA SILVA', matricula: '2274027', lotacao: 'DS' },
+    { grad: 'CB PM', nome: 'SAMAEL MARTINS DE MEDEIROS', matricula: '2277670', lotacao: 'DS' },
+    { grad: 'SD PM', nome: 'ANA CAROLINA RÉGIS DE SOUSA', matricula: '2397846', lotacao: 'GAB C. G.' }
+  ]
+},
+{
+  numero: '39',
+  nome: 'Patrulha 39 - Praça de Esportes (Sentido Santo Antônio) - TURNO A',
+  unidade: 'CPC/CPM',
+  local: 'Praça de Esportes - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'JEFFERSON RUY FLAUSINO DE M.', matricula: '1758527', lotacao: 'DAL' },
+    { grad: '2º SGT PM', nome: 'RICARDO PINHEIRO DE BRITO', matricula: '1670115', lotacao: 'DAL' },
+    { grad: '3º SGT PM', nome: 'JOÃO BATISTA DA SILVA TRINDADE', matricula: '2017520', lotacao: 'DF' },
+    { grad: '3º SGT PM', nome: 'LUIS DIEGO GUILHERME MONTEIRO', matricula: '2022184', lotacao: 'DF' },
+    { grad: '3º SGT PM', nome: 'PATRÉZIO DIEGO TEIXEIRA DE A.', matricula: '2066475', lotacao: 'DF' },
+    { grad: '3º SGT PM', nome: 'TANIO SILVA MARINHO', matricula: '2081156', lotacao: 'DF' }
+  ]
+},
+{
+  numero: '40',
+  nome: 'Patrulha 40 - Praça de Patins (Sentido BH) - TURNO B',
+  unidade: 'CPR II',
+  local: 'Praça de Patins - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'Alberto Mário de Araújo', matricula: '1149113', lotacao: 'CPR II' },
+    { grad: '1º SGT PM', nome: 'Sandro Ricardo Pereira', matricula: '1081888', lotacao: 'CPR II' },
+    { grad: '2º SGT PM', nome: 'Clebio Oliveira dos Santos', matricula: '1673483', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'Cledson Bezerra de Medeiros', matricula: '2021013', lotacao: 'CPR II' },
+    { grad: 'CB PM', nome: 'Alynne Silva Queiroz', matricula: '2278154', lotacao: 'CPR II' },
+    { grad: 'CB PM', nome: 'Emanuel Adolfo Mendes Dantas', matricula: '2271621', lotacao: 'CPR II' },
+    { grad: 'SD PM', nome: 'Hugo Rafael de Medeiros Fernandes', matricula: '2468603', lotacao: 'CPR II' }
+  ]
+},
+{
+  numero: '41',
+  nome: 'Patrulha 41 - Praça de Patins (Sentido BH) - TURNO B',
+  unidade: 'CPR II',
+  local: 'Praça de Patins - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'Cleando Cesar Silva de Araujo', matricula: '1634887', lotacao: 'CPR II' },
+    { grad: '2º SGT PM', nome: 'Erivan Santos da Silva', matricula: '1656589', lotacao: 'CPR II' },
+    { grad: '2º SGT PM', nome: 'Fabio Adriano Alves', matricula: '1627244', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'Francis Alex Costa e Santos', matricula: '2078899', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'George Eriberto dos Santos', matricula: '1021161', lotacao: 'CPR II' },
+    { grad: 'CB PM', nome: 'Higor Fernando Linhares Oliveira', matricula: '2272792', lotacao: 'CPR II' },
+    { grad: 'SD PM', nome: 'João Gregório Cardoso Júnior', matricula: '2472856', lotacao: 'CPR II' }
+  ]
+},
+{
+  numero: '42',
+  nome: 'Patrulha 42 - Praça de Patins (Sentido Santo Antônio) - TURNO B',
+  unidade: 'CPR II',
+  local: 'Praça de Patins - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'Gil Flávio dos Santos', matricula: '1080091', lotacao: 'CPR II' },
+    { grad: '2º SGT PM', nome: 'Francinaldo da Fonseca', matricula: '1963112', lotacao: 'CPR II' },
+    { grad: '2º SGT PM', nome: 'Francisco das Chagas de Araújo', matricula: '1627236', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'João Paulo Morais de Medeiros', matricula: '2021366', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'Jucelio Bezerra da Silva', matricula: '2026309', lotacao: 'CPR II' },
+    { grad: 'CB PM', nome: 'Jean Felipe dos Santos Medeiros', matricula: '2270030', lotacao: 'CPR II' },
+    { grad: 'SD PM', nome: 'Talita Maria de Araújo', matricula: '2398109', lotacao: 'CPR II' }
+  ]
+},
+{
+  numero: '43',
+  nome: 'Patrulha 43 - Praça de Patins (Sentido Santo Antônio) - TURNO B',
+  unidade: 'CPR II',
+  local: 'Praça de Patins - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'João Batista de Souza', matricula: '1085611', lotacao: 'CPR II' },
+    { grad: '2º SGT PM', nome: 'Frankly André de Azevedo Silva', matricula: '1953508', lotacao: 'CPR II' },
+    { grad: '2º SGT PM', nome: 'Gicelio de Freitas', matricula: '1633988', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'Paulo Emanuel Araújo Silva', matricula: '2049937', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'Paulo Roberto Matos dos Santos', matricula: '2048817', lotacao: 'CPR II' },
+    { grad: 'CB PM', nome: 'José Yure Brito dos Santos', matricula: '2278510', lotacao: 'CPR II' },
+    { grad: 'SD PM', nome: 'Mario Alves de Azevedo Júnior', matricula: '2474077', lotacao: 'CPR II' }
+  ]
+},
+
+{
+  numero: '44',
+  nome: 'Patrulha 44 - Praça de Patins (Sentido Santo Antônio)',
+  unidade: 'CPR II',
+  local: 'Praça de Patins - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'Joelson Severino de Medeiros', matricula: '162.731-7', lotacao: 'CPR II' },
+    { grad: '2º SGT PM', nome: 'Jean Cleide Santos', matricula: '167638-5', lotacao: 'CPR II' },
+    { grad: '2º SGT PM', nome: 'José Simão da Silva filho', matricula: '176.325-3', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'Rivanaldo Tomaz da Silva', matricula: '201.695-8', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'Rodrigo Aggeu Lopes de Medeiros', matricula: '208.169-5', lotacao: 'CPR II' },
+    { grad: 'CB PM', nome: 'Matheus Italo Batista Gomes de Araújo', matricula: '227.525-2', lotacao: 'CPR II' },
+    { grad: 'SD PM', nome: 'Raimundo Gundim Neto Lira', matricula: '246.932-4', lotacao: 'CPR II' }
+  ]
+},
+{
+  numero: '45',
+  nome: 'Patrulha 45 - Praça de Patins (Sentido BH)',
+  unidade: 'CPR II',
+  local: 'Praça de Patins - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'Lindebegues Alves de Farias', matricula: '1634550', lotacao: 'CPR II' },
+    { grad: '2º SGT PM', nome: 'JOÃO MARCELO DA SILVA', matricula: '176.284-2', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'Sebastião José da Silva paiva', matricula: '111811-0', lotacao: 'CPR II' },
+    { grad: '3º SGT PM', nome: 'Thiago Ferreira da Silva', matricula: '204.877-9', lotacao: 'CPR II' },
+    { grad: 'CB PM', nome: 'Sillas Rauan de Medeiros Araújo', matricula: '227.682-8', lotacao: 'CPR II' },
+    { grad: 'SD PM', nome: 'Ana Beatriz Leandro de Lima', matricula: '239.783-8', lotacao: 'CPR II' },
+    { grad: 'SD PM', nome: 'TIAGO ANANIAS GONÇALO', matricula: '2391892', lotacao: 'CPR II' }
+  ]
+},
+
+{
+  numero: '46',
+  nome: 'Patrulha 46 - Praça da Convivência (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Praça da Convivência - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'GIOVANI CARDOSO DA SILVA', matricula: '114.061-2', lotacao: 'DAL' },
+    { grad: '2º SGT PM', nome: 'LEONARDO SEVERIANO DA SILVA', matricula: '162.443-1', lotacao: 'DAL' },
+    { grad: 'CB PM', nome: 'DIELLYSON GLEYSER CAMPELO C.', matricula: '227.120-6', lotacao: '6ª S./EMG' },
+    { grad: 'CB PM', nome: 'LEONARDO SOUZA DA SILVA JÚNIOR', matricula: '227.446-9', lotacao: '6ª S./EMG' },
+    { grad: 'CB PM', nome: 'KÁTIA MARIA LAURENTINO DE SÁ', matricula: '227.417-5', lotacao: 'DAL' },
+    { grad: 'SD PM', nome: 'NEFTALI DENIS DE OLIVEIRA', matricula: '239.948-2', lotacao: 'DS' }
+  ]
+},
+{
+  numero: '47',
+  nome: 'Patrulha 47 - Praça da Convivência (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Praça da Convivência - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'GUSTIMÁRIO RIBEIRO BEZERRA', matricula: '114.790-0', lotacao: 'DS' },
+    { grad: '1º SGT PM', nome: 'LÚCIO FLÁVIO DA SILVA', matricula: '114.819-2', lotacao: 'AJU GERAL' },
+    { grad: '2º SGT PM', nome: 'FLÁVIO DE ARAÚJO BERNARDO', matricula: '163.854-8', lotacao: 'AJU GERAL' },
+    { grad: '3º SGT PM', nome: 'AMARILDON VERAS DE SENA JÚNIOR', matricula: '206.556-8', lotacao: 'AJU GERAL' },
+    { grad: '3º SGT PM', nome: 'EMANUEL PAIXÃO DE LIMA', matricula: '207.802-3', lotacao: 'AJU GERAL' },
+    { grad: '3º SGT PM', nome: 'GEORGE LUIZ LUCENA DA SILVA', matricula: '206.424-3', lotacao: 'AJU GERAL' }
+  ]
+},
+{
+  numero: '48',
+  nome: 'Patrulha 48 - Praça da Convivência (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Praça da Convivência - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'JOSÉ LEONILDO DOS SANTOS', matricula: '114.808-7', lotacao: 'CPMUS' },
+    { grad: '1º SGT PM', nome: 'MÁRCIO AURÉLIO MARTINS XAVIER', matricula: '162.459-8', lotacao: 'DP' },
+    { grad: '3º SGT PM', nome: 'ALUISIO DE OLIVEIRA SILVA JUNIOR', matricula: '207.724-8', lotacao: 'DP' },
+    { grad: '3º SGT PM', nome: 'HERDY PINHEIRO FERNANDES', matricula: '201.886-1', lotacao: 'DP' },
+    { grad: '2º SGT PM', nome: 'JOÃO PAULO DA SILVA', matricula: '194.888-1', lotacao: 'DP' },
+    { grad: 'CB PM', nome: 'MARCELO RIBEIRO COSTA', matricula: '206.617-3', lotacao: 'DP' }
+  ]
+},
+{
+  numero: '49',
+  nome: 'Patrulha 49 - Praça da Convivência (Sentido Santo Antônio)',
+  unidade: 'CPC/CPM',
+  local: 'Praça da Convivência - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'KEILLE MARTINS DOS SANTOS', matricula: '113.759-0', lotacao: 'DS' },
+    { grad: '1º SGT PM', nome: 'MARCOS NOBRE DE SOUZA', matricula: '112.437-4', lotacao: 'CFAPM' },
+    { grad: '2º SGT PM', nome: 'FILEMON GOMES DOS SANTOS', matricula: '163.574-3', lotacao: 'DS' },
+    { grad: '2º SGT PM', nome: 'JOSIVAN SILVA BARBOSA', matricula: '166.801-3', lotacao: 'DS' },
+    { grad: '2º SGT PM', nome: 'KENILSON LIMA DE OLIVEIRA', matricula: '162.439-3', lotacao: 'DS' },
+    { grad: '3º SGT PM', nome: 'ALDEMIR DO NASCIMENTO', matricula: '202.512-4', lotacao: 'DS' }
+  ]
+},
+{
+  numero: '50',
+  nome: 'Patrulha 50 - Praça da Convivência (Sentido Santo Antônio)',
+  unidade: 'CPC/CPM',
+  local: 'Praça da Convivência - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'LINDOMAR CHRISTIAN DA T.', matricula: '166.835-8', lotacao: 'DS' },
+    { grad: '1º SGT PM', nome: 'ODAILTON BARBOSA DE MELO', matricula: '114.840-0', lotacao: 'CFAPM' },
+    { grad: '1º SGT PM', nome: 'TÉRZIO ARAÚJO DA SILVA', matricula: '164.098-4', lotacao: 'DS' },
+    { grad: '2º SGT PM', nome: 'KLEIDSON FLÔRENCIO DE MEDEIROS', matricula: '195.279-0', lotacao: 'DS' },
+    { grad: '2º SGT PM', nome: 'MARCONE SOARES MONTE', matricula: '165.830-1', lotacao: 'DS' },
+    { grad: '3º SGT PM', nome: 'BERTONI VIEIRA ALVES', matricula: '207.771-0', lotacao: 'DS' }
+  ]
+},
+{
+  numero: '51',
+  nome: 'Patrulha 51 - Praça da Convivência (Sentido Santo Antônio)',
+  unidade: 'CPC/CPM',
+  local: 'Praça da Convivência - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'MÁRCIO EVARISTO SANTOS G.', matricula: '113.243-1', lotacao: 'DS' },
+    { grad: '1º SGT PM', nome: 'OSMAR ALVES DOS REIS', matricula: '112.449-8', lotacao: 'CFAPM' },
+    { grad: '2º SGT PM', nome: 'MYER PEARLMAN BATISTA DA SILVA', matricula: '166.937-0', lotacao: 'DS' },
+    { grad: '2º SGT PM', nome: 'WILSON PESSOA DE ANDRADE JÚNIOR', matricula: '175.755-5', lotacao: 'DS' },
+    { grad: '3º SGT PM', nome: 'EMANUEL OLIVEIRA DA SILVA', matricula: '207.800-7', lotacao: 'DS' },
+    { grad: '3º SGT PM', nome: 'GUILHERME PATRÍCIO DO NASC', matricula: '207.920-8', lotacao: 'DS' }
+  ]
+},
+
+{
+  numero: '52',
+  nome: 'Patrulha 52 - Praça da Convivência (Sentido Santo Antônio)',
+  unidade: 'CPC/CPM',
+  local: 'Praça da Convivência - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'MARIA LIANE DOS SANTOS', matricula: '111.946-0', lotacao: 'BPRED' },
+    { grad: '2º SGT PM', nome: 'WELSON FERREIRA DA COSTA', matricula: '194.833-4', lotacao: 'SESED' },
+    { grad: '2º SGT PM', nome: 'EDSON OLIVEIRA DE LIMA', matricula: '195.487-3', lotacao: 'SESED' },
+    { grad: '2º SGT PM', nome: 'TARDELLY RAFAEL MOURA DE S', matricula: '195.257-9', lotacao: 'SESED' },
+    { grad: '3º SGT PM', nome: 'RONYPETSON LIMA DE ANDRADE', matricula: '208.203-9', lotacao: 'SESED' },
+    { grad: '3º SGT PM', nome: 'KELLYTON SOARES GOMES', matricula: '208.039-7', lotacao: 'ASSEA' }
+  ]
+},
+{
+  numero: '53',
+  nome: 'Patrulha 53 - Memorial da Resistência (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Memorial da Resistência - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'GILDOMAR SILVANO DE LIMA', matricula: '167.560-5', lotacao: 'DAL' },
+    { grad: '2º SGT PM', nome: 'JOSÉ ROBERTO DOS SANTOS P', matricula: '175.931-0', lotacao: 'DAL' },
+    { grad: 'CB PM', nome: 'RAYLANDO SOARES DE LIMA', matricula: '227.608-9', lotacao: '1ª S./EMG' },
+    { grad: 'CB PM', nome: 'THIAGO BARBOSA GONÇALVES', matricula: '227.703-4', lotacao: '1ª S./EMG' },
+    { grad: 'CB PM', nome: 'HUDSON VIANA PINHEIRO', matricula: '227.283-0', lotacao: 'DE' },
+    { grad: 'CB PM', nome: 'JÔNATHAS RICHEL MACIEL DE SOUSA', matricula: '227.059-5', lotacao: 'DAL' }
+  ]
+},
+{
+  numero: '54',
+  nome: 'Patrulha 54 - Memorial da Resistência (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Memorial da Resistência - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'NIVALDO COSTA DE MELO', matricula: '163.675-8', lotacao: 'CPMUS' },
+    { grad: '1º SGT PM', nome: 'UBIRATAN COSTA DA SILVA', matricula: '114.149-0', lotacao: 'DAL' },
+    { grad: '2º SGT PM', nome: 'KLÉBER PEREIRA BARBOSA', matricula: '208.048-6', lotacao: 'CPMUS' },
+    { grad: '2º SGT PM', nome: 'NATANAEL LUCENA MOTA', matricula: '201.710-5', lotacao: 'CPMUS' },
+    { grad: '2º SGT PM', nome: 'ODERCLEY AZEVEDO DE OLIVEIRA', matricula: '208.160-1', lotacao: 'CPMUS' },
+    { grad: '3º SGT PM', nome: 'KELITONN ANTÔNIO TARGINO A.', matricula: '210.532-2', lotacao: 'CPMUS' }
+  ]
+},
+{
+  numero: '55',
+  nome: 'Patrulha 55 - Memorial da Resistência (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Memorial da Resistência - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'RUBAYAT DIAS BEZERRA', matricula: '196.363-5', lotacao: 'CPMUS' },
+    { grad: '1º SGT PM', nome: 'WALTER GADELHA VIANA NETO', matricula: '113.339-0', lotacao: 'DAL' },
+    { grad: '2º SGT PM', nome: 'ALEXANDRO LUIZ DA SILVA', matricula: '167.191-0', lotacao: 'DAL' },
+    { grad: '2º SGT PM', nome: 'ALYSSON PATRIC VASCONCELOS A', matricula: '164.032-1', lotacao: 'DAL' },
+    { grad: '2º SGT PM', nome: 'ANDERSONGLEI MOURA GAMA', matricula: '194.901-2', lotacao: 'DAL' },
+    { grad: '3º SGT PM', nome: 'FELIPH MARCELL DA COSTA TAVARES', matricula: '207.871-6', lotacao: 'DAL' }
+  ]
+},
+{
+  numero: '56',
+  nome: 'Patrulha 56 - Memorial da Resistência (Sentido Santo Antônio)',
+  unidade: 'CPC/CPM',
+  local: 'Memorial da Resistência - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: 'ST PM', nome: 'THIAGO CARDOSO FERRO', matricula: '195.248-0', lotacao: 'CFAPM' },
+    { grad: '2º SGT PM', nome: 'ÁULIO FERREIRA DE MEDEIROS', matricula: '195.111-4', lotacao: 'APM' },
+    { grad: '2º SGT PM', nome: 'JOILTON RONALDO DA SILVA FILHO', matricula: '175.907-8', lotacao: 'APM' },
+    { grad: '2º SGT PM', nome: 'MARCÍLIO DE OLIVEIRA BEZERRA', matricula: '166.882-0', lotacao: 'APM' },
+    { grad: '3º SGT PM', nome: 'ITAMAZEO TARQUÍNIO DO LAGO M', matricula: '210.521-7', lotacao: 'APM' },
+    { grad: '3º SGT PM', nome: 'MAGNO MOURA MARQUES', matricula: '210.570-5', lotacao: 'APM' }
+  ]
+},
+{
+  numero: '57',
+  nome: 'Patrulha 57 - Memorial da Resistência (Sentido Santo Antônio)',
+  unidade: 'CPC/CPM',
+  local: 'Memorial da Resistência - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'ALDO MENEZES DE LIMA', matricula: '164.028-3', lotacao: 'CFAPM' },
+    { grad: '2º SGT PM', nome: 'AILTON MARIANO DA COSTA', matricula: '167.160-0', lotacao: 'CFAPM' },
+    { grad: '2º SGT PM', nome: 'ALDO JÚNIOR DO NASCIMENTO', matricula: '164.340-1', lotacao: 'CFAPM' },
+    { grad: '2º SGT PM', nome: 'ANDRÉ PATRÍCIO DE SIQUEIRA', matricula: '163.887-4', lotacao: 'CFAPM' },
+    { grad: 'SD PM', nome: 'DEBORAH ILANNA NEVES FURTADO', matricula: '240.024-3', lotacao: 'SJUR' },
+    { grad: 'SD PM', nome: 'EDMUNDO DE OLIVEIRA SOUZA FILHO', matricula: '239.848-6', lotacao: 'DTIC' }
+  ]
+},
+{
+  numero: '58',
+  nome: 'Patrulha 58 - Memorial da Resistência (Sentido Santo Antônio)',
+  unidade: 'CPC/CPM',
+  local: 'Memorial da Resistência - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'BRUNO HENRIQUE DE SOUZA P.', matricula: '167.278-9', lotacao: 'DPS' },
+    { grad: '2º SGT PM', nome: 'MARCIO ALBUQUERQUE FIRMO S.', matricula: '195.494-6', lotacao: 'CIA CMD' },
+    { grad: '2º SGT PM', nome: 'WAGNER BRUNO DE PAULA', matricula: '195.545-4', lotacao: 'CIA CMD' },
+    { grad: '3º SGT PM', nome: 'GERSON LUIZ COSTA DA SILVA', matricula: '207.895-3', lotacao: 'CIA CMD' },
+    { grad: '3º SGT PM', nome: 'WENDER TEIXEIRA DE ALMEIDA', matricula: '206.335-2', lotacao: 'CIA CMD' },
+    { grad: 'SD PM', nome: 'ALLAN DE OLIVEIRA IVAN', matricula: '247.144-2', lotacao: 'CPMUS' }
+  ]
+},
+{
+  numero: '59',
+  nome: 'Patrulha 59 - Teatro Dix-Huit Rosado (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Teatro Dix-Huit Rosado - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'FRANCISCO DE ASSIS JÚNIOR', matricula: '163.871-8', lotacao: 'DS' },
+    { grad: '2º SGT PM', nome: 'ALEXANDRE CARLOS DE CARVALHO R', matricula: '164.108-5', lotacao: 'DS' },
+    { grad: '2º SGT PM', nome: 'ANDERSON LUIS BARROS DA SILVA', matricula: '167.318-1', lotacao: 'DS' },
+    { grad: '2º SGT PM', nome: 'DÁCIO RICARDO DO NASCIMENTO', matricula: '164.279-0', lotacao: 'DS' },
+    { grad: '3º SGT PM', nome: 'LUIZ CARLOS SOUZA DOS S. JUN', matricula: '206.569-0', lotacao: 'DS' },
+    { grad: '3º SGT PM', nome: 'SILVIO MARTINS FELIX', matricula: '206.389-1', lotacao: 'DS' }
+  ]
+},
+{
+  numero: '60',
+  nome: 'Patrulha 60 - Teatro Dix-Huit Rosado (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Teatro Dix-Huit Rosado - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'EDGAR SOARES LEITE JUNIOR', matricula: '163.580-8', lotacao: 'DPS' },
+    { grad: '2º SGT PM', nome: 'GEANILTON FERREIRA DE OLIVEIRA', matricula: '164.403-3', lotacao: 'DPS' },
+    { grad: '2º SGT PM', nome: 'ALBERTO COSTA DE AZEVEDO', matricula: '201.501-3', lotacao: 'DPS' },
+    { grad: '3º SGT PM', nome: 'GUSTHAVO DE ALMEIDA RIBEIRO', matricula: '247.577-4', lotacao: 'CPMUS' },
+    { grad: 'SD PM', nome: 'LAÍSE GALGANE ARAÚJO SILVA', matricula: '246.722-4', lotacao: 'CPMUS' }
+  ]
+},
+{
+  numero: '61',
+  nome: 'Patrulha 61 - Teatro Dix-Huit Rosado (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Teatro Dix-Huit Rosado - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'CARLOS ANDRÉ LOPES DE OLIVEIRA', matricula: '164.323-1', lotacao: '4ª S./EMG' },
+    { grad: '2º SGT PM', nome: 'MARCIO ALEXANDRE DE LIMA', matricula: '166.884-6', lotacao: '4ª S./EMG' },
+    { grad: '2º SGT PM', nome: 'MAXIMILIANO ROCHA DE LUCENA', matricula: '166.421-2', lotacao: 'DPS' },
+    { grad: 'CB PM', nome: 'WILMA FERNANDES AZEVEDO P.', matricula: '227.767-0', lotacao: 'DS' },
+    { grad: 'SD PM', nome: 'LARISSA TAINÃ T. DA SILVA CASTRO', matricula: '217.665-3', lotacao: 'APM' }
+  ]
+},
+{
+  numero: '62',
+  nome: 'Patrulha 62 - Teatro Dix-Huit Rosado (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Teatro Dix-Huit Rosado - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'CARLOS JEFFERSON RODRIGUES', matricula: '167.296-7', lotacao: 'DS' },
+    { grad: '3º SGT PM', nome: 'FERNANDO ANANIAS DA SILVA', matricula: '201.594-3', lotacao: 'SESED' },
+    { grad: '3º SGT PM', nome: 'SUENDEY DE VASCONCELOS', matricula: '201.979-5', lotacao: 'COSEG' },
+    { grad: '3º SGT PM', nome: 'WENDELL WAGNER LIMA DA SILVA', matricula: '201.536-6', lotacao: 'COSEG' },
+    { grad: '3º SGT PM', nome: 'EURÍPEDES BERNADO DE LIMA', matricula: '202.050-5', lotacao: 'SESED' },
+    { grad: '3º SGT PM', nome: 'CÍCERO COSTA RODRIGUES SANTOS', matricula: '201.555-2', lotacao: 'SESED' }
+  ]
+},
+
+{
+  numero: '63',
+  nome: 'Patrulha 63 - Teatro Dix-Huit Rosado (Sentido BH)',
+  unidade: 'CPC/CPM',
+  local: 'Teatro Dix-Huit Rosado - Sentido BH',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'CIZÊNIO CÉSAR SILVA DE MELLO', matricula: '112.199-5', lotacao: 'CFAPM' },
+    { grad: '2º SGT PM', nome: 'ANTÔNIO HERCULANO DOS ANJOS M.', matricula: '167.254-1', lotacao: 'CFAPM' },
+    { grad: '2º SGT PM', nome: 'JEAN JEFFERSON FERREIRA B.', matricula: '166.692-4', lotacao: 'CFAPM' },
+    { grad: '3º SGT PM', nome: 'JACKSON LUIZ TENORIO DE SOUZA', matricula: '202.162-5', lotacao: 'SESED' },
+    { grad: 'SD PM', nome: 'LENAURA TIMOTIO DE Q. G. DA SILVA', matricula: '239.917-2', lotacao: 'DP' }
+  ]
+},
+{
+  numero: '64',
+  nome: 'Patrulha 64 - Teatro Dix-Huit Rosado (Sentido Santo Antônio)',
+  unidade: 'CPC/CPM',
+  local: 'Teatro Dix-Huit Rosado - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'CLEYTON DE AGUIAR FERREIRA', matricula: '111.306-2', lotacao: 'DAL' },
+    { grad: '2º SGT PM', nome: 'CARLOS ANDRÉ DOS SANTOS', matricula: '167.285-1', lotacao: 'DAL' },
+    { grad: '2º SGT PM', nome: 'JESSE FREIRE DE ASSIS', matricula: '114.535-5', lotacao: 'DAL' },
+    { grad: '2º SGT PM', nome: 'JIMMY WILLIAM VIEIRA', matricula: '166.703-3', lotacao: 'DAL' },
+    { grad: '3º SGT PM', nome: 'HUMBERTO LIONÉZIO LEITE JÚNIOR', matricula: '207.975-5', lotacao: 'DAL' },
+    { grad: '3º SGT PM', nome: 'ROMUALDO PINHEIRO DO NAS', matricula: '208.185-7', lotacao: 'DE' }
+  ]
+},
+{
+  numero: '65',
+  nome: 'Patrulha 65 - Teatro Dix-Huit Rosado (Sentido Santo Antônio)',
+  unidade: 'CPC/CPM',
+  local: 'Teatro Dix-Huit Rosado - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'FLÁVIO GOMES DE BRITO', matricula: '164.399-1', lotacao: 'DP' },
+    { grad: '2º SGT PM', nome: 'JOÁS DO NASCIMENTO OLIMPIO', matricula: '162.414-8', lotacao: 'DF' },
+    { grad: '2º SGT PM', nome: 'ALEXANDRE MAGNO DA SILVA', matricula: '196.226-4', lotacao: 'DP' },
+    { grad: '2º SGT PM', nome: 'CARLOS ALEXANDRE CARRERAS', matricula: '197.706-7', lotacao: 'DP' },
+    { grad: '2º SGT PM', nome: 'GIULLIANO ALVES DE SOUSA', matricula: '195.262-5', lotacao: 'DP' },
+    { grad: '3º SGT PM', nome: 'ALISSON NÓBREGA DE MORAIS', matricula: '207.719-1', lotacao: 'DP' }
+  ]
+},
+{
+  numero: '066',
+  nome: 'Patrulha 066 - Teatro Dix-Huit Rosado (Sentido Santo Antônio)',
+  unidade: 'CPC/CPM',
+  local: 'Teatro Dix-Huit Rosado - Sentido Santo Antônio',
+  dia: 'Sábado',
+  horario: '12h às 00h',
+  policiais: [
+    { grad: '1º SGT PM', nome: 'FRANCISCO CAIRO DE MEDEIROS', matricula: '167.508-7', lotacao: 'DJD' },
+    { grad: '2º SGT PM', nome: 'CARLOS ANDRE FÉLIX DE SOUZA', matricula: '167.286-0', lotacao: 'DJD' },
+    { grad: '2º SGT PM', nome: 'PABLO FLORÊNCIO BITU COUTINHO', matricula: '195.483-0', lotacao: 'UCI' },
+    { grad: '3º SGT PM', nome: 'CLEITON DE MEDEIROS', matricula: '201.968-0', lotacao: 'DJD' },
+    { grad: '3º SGT PM', nome: 'LUÍS CLÁUDIO DA SILVA ALB', matricula: '202.231-1', lotacao: 'DJD' },
+    { grad: 'CB PM', nome: 'ALVARUS SEVERINO BATISTA S.J.', matricula: '227.348-9', lotacao: 'ASSEA' }
+  ]},
+
+]
+;
+
+    // Função que monta e exibe os cards das patrulhas
+    function montarCards() {
+      const container = document.getElementById('patrulhas-container');
+      container.innerHTML = '';
+
+      patrulhas.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.setAttribute('data-numero', p.numero);
+
+        card.innerHTML = `
+          <h3>${p.nome}</h3>
+          <p><strong>Unidade:</strong> ${p.unidade}</p>
+          <p><strong>Local:</strong> ${p.local}</p>
+          <p><strong>Dia:</strong> ${p.dia}</p>
+          <p><strong>Horário:</strong> ${p.horario}</p>
+          <div class="team">
+            <p><strong>Equipe:</strong></p>
+            <ul>
+              ${p.policiais.map(pol => 
+                `<li>
+                  ${pol.grad} - ${pol.nome} (Matrícula: ${pol.matricula}) - ${pol.lotacao}
+                </li>`
+              ).join('')}
+            </ul>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+function filtrarPatrulhas() {
+  const termo = document.getElementById('search').value.toLowerCase();
+  const cards = document.querySelectorAll('.card');
+
+  cards.forEach(card => {
+    const numero = card.getAttribute('data-numero');
+    const patrulhaDados = patrulhas.find(p => p.numero === numero);
+
+    // Normaliza matrícula para comparar sem pontos e traços
+    const bateNumero = numero.includes(termo);
+    const bateNome = patrulhaDados.nome.toLowerCase().includes(termo);
+    const bateLocal = patrulhaDados.local.toLowerCase().includes(termo);
+
+    const batePolicial = patrulhaDados.policiais.some(pol => {
+      const matriculaSemPonto = pol.matricula.replace(/[.\-]/g, '');
+      return (
+        pol.nome.toLowerCase().includes(termo) ||
+        matriculaSemPonto.includes(termo)
+      );
+    });
+
+    if (bateNumero || bateNome || bateLocal || batePolicial || termo === '') {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+    }
+
+    // Monta os cards ao carregar a página
+    montarCards();
+  </script>
+
+</body
