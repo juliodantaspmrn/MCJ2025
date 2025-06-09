@@ -83,6 +83,33 @@
     margin-top: 10px;  /* espaçamento acima */
   }
 </style>
+  <div class="filtro-dia">
+  <button onclick="filtrarPorDia('11.06.2025')" id="btn-dia-11">Dia 11</button>
+  <button onclick="filtrarPorDia('12.06.2025')" id="btn-dia-12">Dia 12</button>
+<button onclick="filtrarPorDia('13.06.2025')" id="btn-dia-13">Dia 13</button>
+<button onclick="filtrarPorDia('14.06.2025')" id="btn-dia-14">Dia 14</button>
+</div>
+<style>
+  .filtro-dia {
+    margin: 1rem 0;
+    display: flex;
+    gap: 1rem;
+  }
+  .filtro-dia button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    background-color: #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .filtro-dia button.ativo {
+    background-color: #2c3e50;
+    color: white;
+  }
+</style>
+
   <input type="text" id="search" placeholder="Digite nome do policial ou número da patrulha..." oninput="filtrarPatrulhas()" />
 
   <div id="patrulhas-container">
@@ -914,67 +941,105 @@
 
     // Função que monta e exibe os cards das patrulhas
     function montarCards() {
-      const container = document.getElementById('patrulhas-container');
-      container.innerHTML = '';
+    const container = document.getElementById('patrulhas-container');
+    container.innerHTML = '';
 
-      patrulhas.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.setAttribute('data-numero', p.numero);
+    patrulhas.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.setAttribute('data-numero', p.numero);
+      card.setAttribute('data-dia', p.dia); // usado para filtro por dia
 
-        card.innerHTML = `
-          <h3>${p.nome}</h3>
-          <p><strong>Unidade:</strong> ${p.unidade}</p>
-          <p><strong>Local:</strong> ${p.local}</p>
-          <p><strong>Dia:</strong> ${p.dia}</p>
-          <p><strong>Horário:</strong> ${p.horario}</p>
-          <div class="team">
-            <p><strong>Equipe:</strong></p>
-            <ul>
-              ${p.policiais.map(pol => 
-                `<li>
-                  ${pol.grad} - ${pol.nome} (Matrícula: ${pol.matricula}) - ${pol.lotacao}
-                </li>`
-              ).join('')}
-            </ul>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-function filtrarPatrulhas() {
-  const termo = document.getElementById('search').value.toLowerCase();
-  const cards = document.querySelectorAll('.card');
-
-  cards.forEach(card => {
-    const numero = card.getAttribute('data-numero');
-    const patrulhaDados = patrulhas.find(p => p.numero === numero);
-
-    // Normaliza matrícula para comparar sem pontos e traços
-    const bateNumero = numero.includes(termo);
-    const bateNome = patrulhaDados.nome.toLowerCase().includes(termo);
-    const bateLocal = patrulhaDados.local.toLowerCase().includes(termo);
-
-    const batePolicial = patrulhaDados.policiais.some(pol => {
-      const matriculaSemPonto = pol.matricula.replace(/[.\-]/g, '');
-      return (
-        pol.nome.toLowerCase().includes(termo) ||
-        matriculaSemPonto.includes(termo)
-      );
+      card.innerHTML = `
+        <h3>${p.nome}</h3>
+        <p><strong>Unidade:</strong> ${p.unidade}</p>
+        <p><strong>Local:</strong> ${p.local}</p>
+        <p><strong>Dia:</strong> ${p.dia}</p>
+        <p><strong>Horário:</strong> ${p.horario}</p>
+        <div class="team">
+          <p><strong>Equipe:</strong></p>
+          <ul>
+            ${p.policiais.map(pol =>
+              `<li>${pol.grad} - ${pol.nome} (Matrícula: ${pol.matricula}) - ${pol.lotacao}</li>`
+            ).join('')}
+          </ul>
+        </div>
+      `;
+      container.appendChild(card);
     });
+  }
 
-    if (bateNumero || bateNome || bateLocal || batePolicial || termo === '') {
-      card.classList.remove('hidden');
-    } else {
-      card.classList.add('hidden');
-    }
-  });
-    }
+  // Filtra os cards pelo texto digitado no campo de busca
+  function filtrarPatrulhas() {
+    const termo = document.getElementById('search').value.toLowerCase();
+    const cards = document.querySelectorAll('.card');
 
-    // Monta os cards ao carregar a página
-    montarCards();
-  </script>
+    cards.forEach(card => {
+      const numero = card.getAttribute('data-numero');
+      const patrulhaDados = patrulhas.find(p => p.numero === numero);
 
-</body
+      const bateNumero = numero.includes(termo);
+      const bateNome = patrulhaDados.nome.toLowerCase().includes(termo);
+      const bateLocal = patrulhaDados.local.toLowerCase().includes(termo);
+      const batePolicial = patrulhaDados.policiais.some(pol => {
+        const matriculaSemPonto = pol.matricula.replace(/[.\-]/g, '');
+        return (
+          pol.nome.toLowerCase().includes(termo) ||
+          matriculaSemPonto.includes(termo)
+        );
+      });
 
+      const bateDia = !diaSelecionado || patrulhaDados.dia === diaSelecionado;
+
+      if ((bateNumero || bateNome || bateLocal || batePolicial || termo === '') && bateDia) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  }
+
+  // Filtro por dia clicando nos botões
+ function filtrarPorDia(dia) {
+  diaSelecionado = dia;
+  const botoes = document.querySelectorAll('.filtro-dia button');
+
+  // Atualiza visual dos botões
+  botoes.forEach(btn => btn.classList.remove('ativo'));
+
+  // Ativa o botão correspondente
+  if (document.getElementById(`btn-dia-${dia.slice(0, 2)}`)) {
+    document.getElementById(`btn-dia-${dia.slice(0, 2)}`).classList.add('ativo');
+  }
+
+  document.getElementById('search').value = ''; // limpa campo de busca
+  filtrarPatrulhas(); // reaplica filtro geral
+}
+
+  // Monta os cards ao carregar a página
+  montarCards();
+</script>
+</body>
+
+<div class="filtro-dia" style="margin-bottom: 1rem;">
+  <button id="btn-dia-11" onclick="filtrarPorDia('11.06.2025')">DIA 11</button>
+  <button id="btn-dia-12" onclick="filtrarPorDia('12.06.2025')">DIA 12</button>
+  <button id="btn-dia-13" onclick="filtrarPorDia('13.06.2025')">DIA 13</button>
+  <button id="btn-dia-14" onclick="filtrarPorDia('14.06.2025')">DIA 14</button>
+</div>
+
+<style>
+  .filtro-dia button {
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #dfe6e9;
+  cursor: pointer;
+  font-weight: bold;
+}
+.filtro-dia button.ativo {
+  background-color: #2c3e50;
+  color: white;
+}
+</style>
