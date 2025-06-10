@@ -1182,82 +1182,96 @@
 ];
 
     // Função que monta e exibe os cards das patrulhas
-    function montarCards() {
-    const container = document.getElementById('patrulhas-container');
-    container.innerHTML = '';
+   function montarCards() {
+  const container = document.getElementById('patrulhas-container');
+  container.innerHTML = '';
 
-    patrulhas.forEach(p => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.setAttribute('data-numero', p.numero);
-      card.setAttribute('data-dia', p.dia); // usado para filtro por dia
+  patrulhas.forEach((p, index) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('data-id', index); // ID único do array
 
-      card.innerHTML = `
-        <h3>${p.nome}</h3>
-        <p><strong>Unidade:</strong> ${p.unidade}</p>
-        <p><strong>Local:</strong> ${p.local}</p>
-        <p><strong>Dia:</strong> ${p.dia}</p>
-        <p><strong>Horário:</strong> ${p.horario}</p>
-        <div class="team">
-          <p><strong>Equipe:</strong></p>
-          <ul>
-            ${p.policiais.map(pol =>
-              `<li>${pol.grad} - ${pol.nome} (Matrícula: ${pol.matricula}) - ${pol.lotacao}</li>`
-            ).join('')}
-          </ul>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  }
+    card.innerHTML = `
+      <h3>${p.nome}</h3>
+      <p><strong>Unidade:</strong> ${p.unidade}</p>
+      <p><strong>Local:</strong> ${p.local}</p>
+      <p><strong>Dia:</strong> ${p.dia}</p>
+      <p><strong>Horário:</strong> ${p.horario}</p>
+      <div class="team">
+        <p><strong>Equipe:</strong></p>
+        <ul>
+          ${p.policiais.map(pol => 
+            `<li>${pol.grad} - ${pol.nome} (Matrícula: ${pol.matricula}) - ${pol.lotacao}</li>`
+          ).join('')}
+        </ul>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
 
   // Filtra os cards pelo texto digitado no campo de busca
-  function filtrarPatrulhas() {
-    const termo = document.getElementById('search').value.toLowerCase();
-    const cards = document.querySelectorAll('.card');
+ function filtrarPatrulhas() {
+  const termo = document.getElementById('search').value.toLowerCase();
+  const cards = document.querySelectorAll('.card');
 
-    cards.forEach(card => {
-      const numero = card.getAttribute('data-numero');
-      const patrulhaDados = patrulhas.find(p => p.numero === numero);
+  cards.forEach(card => {
+    const id = parseInt(card.getAttribute('data-id'), 10); // ← Pega o índice
+    const patrulhaDados = patrulhas[id]; // ← Garante que é a patrulha certa
 
-      const bateNumero = numero.includes(termo);
-      const bateNome = patrulhaDados.nome.toLowerCase().includes(termo);
-      const bateLocal = patrulhaDados.local.toLowerCase().includes(termo);
-      const batePolicial = patrulhaDados.policiais.some(pol => {
-        const matriculaSemPonto = pol.matricula.replace(/[.\-]/g, '');
-        return (
-          pol.nome.toLowerCase().includes(termo) ||
-          matriculaSemPonto.includes(termo)
-        );
-      });
+    const bateNumero = patrulhaDados.numero.includes(termo);
+    const bateNome = patrulhaDados.nome.toLowerCase().includes(termo);
+    const bateLocal = patrulhaDados.local.toLowerCase().includes(termo);
 
-      const bateDia = !diaSelecionado || patrulhaDados.dia === diaSelecionado;
-
-      if ((bateNumero || bateNome || bateLocal || batePolicial || termo === '') && bateDia) {
-        card.classList.remove('hidden');
-      } else {
-        card.classList.add('hidden');
-      }
+    const batePolicial = patrulhaDados.policiais.some(pol => {
+      const matriculaSemPonto = pol.matricula.replace(/[.\-]/g, '');
+      return (
+        pol.nome.toLowerCase().includes(termo) ||
+        matriculaSemPonto.includes(termo)
+      );
     });
-  }
+
+    if (bateNumero || bateNome || bateLocal || batePolicial || termo === '') {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+
 
   // Filtro por dia clicando nos botões
  function filtrarPorDia(dia) {
-  diaSelecionado = dia;
+  const cards = document.querySelectorAll('.card');
   const botoes = document.querySelectorAll('.filtro-dia button');
 
-  // Atualiza visual dos botões
   botoes.forEach(btn => btn.classList.remove('ativo'));
 
-  // Ativa o botão correspondente
-  if (document.getElementById(`btn-dia-${dia.slice(0, 2)}`)) {
-    document.getElementById(`btn-dia-${dia.slice(0, 2)}`).classList.add('ativo');
+  if (dia === '11.06.2025') {
+    document.getElementById('btn-dia-11').classList.add('ativo');
+  } else if (dia === '12.06.2025') {
+    document.getElementById('btn-dia-12').classList.add('ativo');
+  } else if (dia === '13.06.2025') {
+    document.getElementById('btn-dia-13').classList.add('ativo');
+  } else if (dia === '14.06.2025') {
+    document.getElementById('btn-dia-14').classList.add('ativo');
   }
 
-  document.getElementById('search').value = ''; // limpa campo de busca
-  filtrarPatrulhas(); // reaplica filtro geral
-}
+  cards.forEach(card => {
+    const id = parseInt(card.getAttribute('data-id'), 10);
+    const patrulhaDados = patrulhas[id];
 
+    if (patrulhaDados.dia === dia) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+
+  // Limpa busca
+  document.getElementById('search').value = '';
+}
   // Monta os cards ao carregar a página
   montarCards();
 </script>
